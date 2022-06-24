@@ -4,12 +4,6 @@ library(lubridate)
 library(ggplot2)
 ### Query the database to return information on meter inspections and permits
 # 2. Settings
-db_user <- 'SEO_read_only'
-db_password <- 'SEOreadonly7776163'
-db_name <- 'L0jORUA00kJnjKwh'
-#db_table <- 'your_data_table'
-db_host <- '35.225.47.45' # for local access
-db_port <- 3306
 
 
 # 3. Read data from db
