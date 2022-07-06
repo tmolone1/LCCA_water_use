@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>e-Permit</title>
+    <meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR" />
+    <meta content="C#" name="CODE_LANGUAGE" />
+    <meta content="JavaScript" name="vs_defaultClientScript" />
+    <meta content="//schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema" />
+
+    <link href="../Styles/ePermit.css" type="text/css" rel="stylesheet" />
+    <link href="../Styles/ePermitnew.css" rel="stylesheet" type="text/css" />
+    <script src="../Script/help_window.js" type="text/javascript"></script>
+    <script src="../Script/Autoformatfuncations.js" type="text/javascript"></script>
+    <script src="../Script/html5shiv.js" type="text/javascript"></script>
+    <script src="../Script/html5shiv-printshiv.js" type="text/javascript"></script>
+    <script src="../Script/help_window.js" type="text/javascript"></script>
+    <script src="../Script/Autoformatfuncations.js" type="text/javascript"></script>
+    <script src="../Script/FormattingFunctions.js" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js"></script>
+
+    <script type="text/javascript">        history.forward(); </script>
+    <script type="text/javascript">
+        var dontSubmitMe = false;
+        function DelConfirmation() {
+            document.getElementById('lblMessage').style.visibility = "hidden";
+            res = confirm('This will delete the Transaction from e-Permit.  Do you want to proceed?')
+            if (!res) {
+                alert('Delete Instrument Cancelled.');
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        function DelConfirmationePermits() {
+            document.getElementById('lblMessage').style.visibility = "hidden";
+            res = confirm('This will delete the Transaction from My e-Permits.  Do you want to proceed?')
+            if (!res) {
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        function _DivHeight(divcolumn) {
+
+            var height = Math.max(window.innerHeight,
+                document.documentElement.clientHeight,
+                document.body.scrollHeight);
+            var test = document.getElementById('columnleft');
+            test.style.height = height + "px";
+            toggleSlides();
+
+        }
+        function OpenCopyPage(strTransID) {
+            window.open("CopyTransaction.aspx?Flag=45", "searchWaterRight", "status=no,toolbar=no,menubar=no,location=no,scrollbars=no,resizable=no,top=100,left=160,width=740,height=500");
+        }
+        function OpenWindow() {
+            window.open("CopyTrans.aspx", "copyTransaction", "status=no,toolbar=no,menubar=no,location=no,scrollbars=no,resizable=no,top=100,left=160,width=740,height=500");
+        }
+        function checkSubmit() {
+            if (dontSubmitMe == true) {
+                document.getElementById('lnkNewUW6').disabled = true;
+            }
+            return !dontSubmitMe;
+        }
+        function UW6Alert() {
+            alert('Form UW 6 is not required in this case.  If you still want to submit a UW 6, please contact the Ground Water Division.');
+        }
+        function UW8Alert() {
+            alert('A Proof of Appropriation and Beneficial Use of Ground Water (Form UW 8) is not required in this case.  If you still want to submit a UW 8, please contact the Ground Water Division.');
+        }
+
+        function UW8Alert1(obj, obj1) {
+            var confirm_value = document.createElement("INPUT");
+            confirm_value.type = "hidden";
+            confirm_value.name = "confirm_value";
+            if (confirm("Do you want to save data?")) {
+                confirm_value.value = "Yes";
+            } else {
+                confirm_value.value = "No";
+            }
+            document.forms[0].appendChild(confirm_value);
+        }
+
+
+        function GetInboxSelectedRow(lnk) {
+            var row = lnk.parentNode.parentNode;
+            var rowIndex = row.rowIndex - 1;
+            var label = GetChildControl(row, "lblInstCode");
+            if (label.innerHTML == 'UW6') {
+                var r = confirm("UW6 already exists. Would you like to create another?");
+                if (r == true) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+            else if (label.innerHTML == 'UW8') {
+                var r = confirm("UW8 already exists. Would you like to create another?");
+                if (r == true) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+            else {
+                return true;
+            }
+        }
+
+        function GetSelectedRow(lnk) {
+
+            var row = lnk.parentNode.parentNode;
+            var rowIndex = row.rowIndex - 1;
+            var label = GetChildControl(row, "lblUW8orUW6");
+            if (label.innerHTML != '') {
+                var r = confirm(label.innerHTML);
+                if (r == true) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+            else {
+                return true;
+            }
+        }
+
+        function GetUw6SelectedRow(lnk) {
+
+            var row = lnk.parentNode.parentNode;
+            var rowIndex = row.rowIndex - 1;
+            var label = GetChildControl(row, "lblUW6");
+            if (label.innerHTML != '') {
+                var r = confirm(label.innerHTML);
+                if (r == true) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+            else {
+                return true;
+            }
+        }
+
+
+        function GetChildControl(element, id) {
+            var child_elements = element.getElementsByTagName("*");
+            for (var i = 0; i < child_elements.length; i++) {
+                if (child_elements[i].id.indexOf(id) != -1) {
+                    return child_elements[i];
+                }
+            }
+        };
+
+
+    </script>
+    <script type="text/javascript">
+        function toggleSlides() {
+            $('.toggler').click(function (e) {
+                var id = $(this).attr('id');
+                var widgetId = id.substring(id.indexOf('-') + 1, id.length);
+                $('#' + widgetId).slideToggle();
+                $(this).toggleClass('sliderExpanded');
+                $('.closeSlider').click(function () {
+                    $(this).parent().hide('slow');
+                    var relatedToggler = 'toggler-' + $(this).parent().attr('id');
+                    $('#' + relatedToggler).removeClass('sliderExpanded');
+                });
+            });
+        };
+    </script>
+
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setHeight('.col1, .col2,');
+        });
+
+        var maxHeight = 0;
+
+        function setHeight(column) {
+            //Get all the element with class = col
+            column = $(column);
+            //Loop all the column
+            column.each(function () {
+                //Store the highest value
+                if ($(this).height() > maxHeight) {
+                    maxHeight = $(this).height();;
+                }
+            });
+            //Set the height
+            column.height(maxHeight);
+        }
+    </script>
+    <style type="text/css">
+        .hideColumn {
+            display: none;
+        }
+    </style>
+</head>
+<body onunload="ClosingAllWindows()">
+    <form method="post" action="./inbox.aspx" id="Form1" onsubmit="return checkSubmit();">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="HU/Px81jr3XRk9SxE/0IboYXSnOORXtVa8HSjNy5q/36lgXzedD80dvHht76aysHOi9lFPe5f5+73UOniaat0Qw0uMitjVI0XTIQwpJaE7VpbJnMpHvWTFuvRCC3uoQeA40HbZXiegxwuhKYy+vh6RzzgsL9sanasF39SdOh8ttB3/bHSWAXBoOWedMk7NwoVh55i8V5a10vhbtCge6jJf6uSfTbUqfYsVMLH2LCdmk+WHeTNPxdo8un0PJ4BY+NkQJQvqlbEPoP3sjotu+QT/PeDYZfEVy2lqUSJhw6KRCJWfw9yiKQVdu7vXQIKUSA+nnm6tsBX4ZhYIyC3owcLZd8x/Njq0jZ+G7zTF436WK4HGetSuT+QbQm5wZQ9syXR7JAZ7kxsSH+cRiTw6Dj0oZc1HXG2RuawaTsCopGi2DuZCfM+1fDvsqc6KZHzhst4EUqCSFa5MH6okXhNvBeRdvS8NCE4lGk3KtzYBBNxzqWFGF2z1kXvsAg3//Hj9vrjhbixc8FiRVlJbyNy0XryutgMiwP6NMXpqugiNNAeYZyMUHt0o196u0bJ4lgvAorFCu+0Uk7n2ZM24AMynhFeZF4Ju2PZNipZGPW/L1/fW7F9bDBjqlrCFWfJRxcPyVH9M2OV/k/T/b5i+0NTH+6Zejhrn03OycWx0xt21qSU7MfNffPfw4C+Z5/jvLGYZMn2VdsJmBUSn2tIo2twWs2elfJ1jPkZO6TKAofA0joTy1xe92vVnUvdJ/GAXNxEKhGhnkDu5nTxjh7jJWmhsHbBdg6GuBYnh6YwlswmGatw8WdGILsNeddi7X+mHBiC61r52qHWvmN3p6DpMQOgsgY/WYYUF1X/NcGjxUOp6GlA/AyTZuiiLLWf6fZUjIBK6MF9ZU3FtCQenP6486/gZEKSRNii5ZsbRCeWt/rqIonelxbUTrxcGf30qbY1FEhPyJMBmHwfbwqCDEOiiYynQnGpVbE9Zoxe2My6d89KU6MIx0NXtXTKNFpds5t27qPgajI6lHazFzUgRkZXdhunx2xIAaAzDkomiNdB9rqx/tysq6wIlcJH7+GG7xoSxI/3hK1lPqhqxZNxLwRxMAKgp1Bjj+9KbdUzLc++ucmBIsmnmorRZc2T+5jFofvY6J/XAZ9" />
+
+
+<script src="https://ajax.aspnetcdn.com/ajax/4.5.1/1/MicrosoftAjax.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+(window.Sys && Sys._Application && Sys.Observer)||document.write('<script type="text/javascript" src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js"><\/script>');//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="66D73750" />
+        
+        <div id="UPInbox">
+	
+                <script type="text/javascript">
+                    Sys.Application.add_load(_DivHeight);
+                </script>
+                <div id="mainwrapper">
+                    <aside id="aside">
+                        <div id="columnleft" class="col1">
+                            <div>
+                                
+<div id="tblOut" class="adminnavframe" style="width: 98%">       
+            <ul id="tblInbox" class="nav">
+                <li><a id="UCInbox1_lnkInbox" href="javascript:__doPostBack(&#39;UCInbox1$lnkInbox&#39;,&#39;&#39;)">Inbox</a></li>
+                <li><a id="UCInbox1_lnkSubmit" href="javascript:__doPostBack(&#39;UCInbox1$lnkSubmit&#39;,&#39;&#39;)">Submit Question</a>
+                 <li id="UCInbox1_trMyPermitBox">
+                    <a id="UCInbox1_lnkMyPermit" href="javascript:__doPostBack(&#39;UCInbox1$lnkMyPermit&#39;,&#39;&#39;)"><b>My e-Permits</b></a>
+                </li>
+                <li><a id="UCInbox1_lnkUserProfile" href="javascript:__doPostBack(&#39;UCInbox1$lnkUserProfile&#39;,&#39;&#39;)">My Profile</a></li>   
+                <li><a id="UCInbox1_lnkTrash" href="javascript:__doPostBack(&#39;UCInbox1$lnkTrash&#39;,&#39;&#39;)">Trash</a></li>               
+                <li id="UCInbox1_trHoldbox">
+                    <a id="UCInbox1_lnkHoldBox" href="javascript:__doPostBack(&#39;UCInbox1$lnkHoldBox&#39;,&#39;&#39;)">Hold Box</a>
+                </li>
+              </ul>        
+</div>
+
+
+                            </div>
+                            
+                            <div id="tblMyePermitsLegend">
+                                <p>
+                                    <span id="Label1" class="LabelUnderLine">Legend:</span>
+                                </p>
+                                <p>
+                                    <div class='legendcontainerBox'>
+                                        <div>
+                                            <input type="image" name="Imagebutton1" id="Imagebutton1" disabled="disabled" class="aspNetDisabled legendicon" src="../Images/blue_leg.gif" align="absmiddle" />
+                                            <div class="legendtxt">
+                                                <h4>
+                                                    <span id="Label4">Notices submission pending</span></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='legendcontainerBox'>
+                                        <div>
+                                            <input type="image" name="Imagebutton2" id="Imagebutton2" disabled="disabled" class="aspNetDisabled legendicon" src="../Images/empty.gif" align="absmiddle" />
+                                            <div class="legendtxt">
+                                                <h4>
+                                                    <span id="Label5">Notices already submitted</span></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p>
+                                    </p>
+                                    <p>
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </aside>
+                    <section id="section">
+                        <div id="columnright" class="col2">
+                            <div id="tblOtbd">
+                                <div id="tblWel" class="table1">
+                                    <div class="alignCenter">
+                                        <span id="lblMessage" class="lblMessage"></span>
+                                    </div>
+                                    
+                                </div>
+                                <!--Added by Vadluri Sreenu; Version:V3; Date: 04-18-2011; PITS ID:3070;-->
+                                <div id="infoDiv" class="sliderimg">
+                                    <blockquote>
+                                        <p id="toggler-slideOne" class="toggler">
+                                            <span class="expandSlider">
+                                                <img src="../images/mainicons/personal-information2.png" title="Online Instrument Info"></img></span><span
+                                                    class="collapseSlider"><img src="../images/mainicons/personal-information2.png"></img></span>
+                                        </p>
+                                    </blockquote>
+                                </div>
+                                <div class="slider" id="slideOne">
+                                    <div>
+                                        
+                                    </div>
+                                    <div class="padd2">
+                                        <span id="lblMyPermitHeading">                                        
+                                            Your permits processed through e-Permit are shown on this screen based on your selected appropriator’s name(s). You can use this page to review the details of the electronic applications associated with your permit and use the previous electronic application as the starting point for associated notices.<br /><br />
+                                            To obtain additional information about your water right or information about a water right not processed through e-Permit, use the Search option on the main menu.                                          
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="column1of2 process">
+                                    <h2>
+                                        <span id="lblInboxHeading"></span></h2>
+                                </div>
+                                <div class="column2of2">
+                                    
+                                </div>
+                                <div class="clearfloat">
+                                </div>
+                                
+                                
+                                <div id="headerMyPermits" class="column-container">
+                                    <div id="breadcrumb" class="column-left">Inbox &raquo; My e-Permits</div>
+                                    <div class="column-center">
+                                        <span id="Label7"><h1>My e-Permits</h1></span>
+                                    </div>
+                                    <div class="column-right"></div>
+                                </div>
+                                
+                                <div id="tdMyPermit" style="clear: both">
+                                    <table class="datagrid" cellspacing="0" rules="all" border="1" id="grdMyPermitBox" width="100%">
+		<tr class="datagridheadercell">
+			<td><a href="javascript:__doPostBack(&#39;grdMyPermitBox$ctl01$ctl03&#39;,&#39;&#39;)">Source</a></td><td><a href="javascript:__doPostBack(&#39;grdMyPermitBox$ctl01$ctl04&#39;,&#39;&#39;)">Inst. Code</a></td><td><a href="javascript:__doPostBack(&#39;grdMyPermitBox$ctl01$ctl05&#39;,&#39;&#39;)">Number</a></td><td><a href="javascript:__doPostBack(&#39;grdMyPermitBox$ctl01$ctl06&#39;,&#39;&#39;)">Facility/Well Name</a></td><td><a href="javascript:__doPostBack(&#39;grdMyPermitBox$ctl01$ctl07&#39;,&#39;&#39;)">Appropriator Name</a></td><td><a href="javascript:__doPostBack(&#39;grdMyPermitBox$ctl01$ctl08&#39;,&#39;&#39;)">Priority Date</a></td><td><a href="javascript:__doPostBack(&#39;grdMyPermitBox$ctl01$ctl09&#39;,&#39;&#39;)">PLSS Location</a></td><td>Summary</td><td>Copy</td><td>Notice</td><td>Last WR Document</td><td class="hideColumn">&nbsp;</td><td class="hideColumn">&nbsp;</td><td class="hideColumn">&nbsp;</td><td>Delete</td>
+		</tr>
+	</table>
+                                </div>
+                                <div class="datagridpagenavbg">
+                                    <div id="tblPageCount">
+                                        
+                                        
+                                        <input name="txtGo" type="text" value="1" maxlength="4" id="txtGo" class="datagrid" keyup="return AllowIntegerOnly(event,&#39;txtGo&#39;);return clickButton(event,&#39;imgbGo&#39;);" keydown="return clickButton(event,&#39;imgbGo&#39;);" style="border: 1px groove #3d64c7;" />
+                                        <span id="lblOf" class="pagenav">of</span>
+                                        <span id="lblT" class="pagenav">0</span>
+                                        <span id="lblPages" class="pagenav">Page(s)</span>
+                                        <input type="submit" name="imgbGo" value="Go" id="imgbGo" class="buttongo" ImageAlign="AbsBottom" value="Go" />
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <input name="helpid" type="hidden" id="helpid" value="Inbox_200" />
+                            <input name="hidsortexp" type="hidden" id="hidsortexp" />
+                            <input name="hidUserid" type="hidden" id="hidUserid" />
+                            <input name="hidihMode" type="hidden" id="hidihMode" value="MYPERMIT" />
+                            <input name="hidmysortexp" type="hidden" id="hidmysortexp" />
+                        </div>
+                    </section>
+                </div>
+            
+</div>
+        <div id="UpdateProgress1" style="display:none;">
+	
+                <div class="modal">
+                    <div class="center">
+                        <img alt="" src="../Images/ajax-loader.gif" />
+                    </div>
+                </div>
+            
+</div>
+    </form>
+</body>
+</html>

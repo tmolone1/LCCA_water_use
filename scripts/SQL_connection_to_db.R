@@ -34,7 +34,7 @@ print(tbls)
 # Query the "actor" tables to get all the rows.
 
 # returns the number of records
-tbl<-"MeterInformation"
+tbl<-"PermitList"
 sql <- paste("select count(*) from", tbl)
 result <- dbGetQuery(mydb, sql)  
 print(result)
@@ -58,7 +58,7 @@ result <- dbGetQuery(mydb, paste0("select * from INFORMATION_SCHEMA.COLUMNS wher
 print(result$COLUMN_NAME)
 
 # returns specific columns from the selected table
-result <- dbGetQuery(mydb, paste("select id, Permit_No, Latitude, Longitude from", tbl))  
+result <- dbGetQuery(mydb, paste("select WR_Number from", tbl))  
 
 
 dbDisconnect(mydb)

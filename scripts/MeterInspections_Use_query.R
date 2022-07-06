@@ -2,6 +2,7 @@ library(RMySQL)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(sf)
 ### Query the database to return information on meter inspections and permits
 # 2. Settings
 db_user <- 'SEO_read_only'
@@ -83,24 +84,59 @@ mutation<-mutation %>% filter(Prev_insp_date>"2019-01-01",Use_Period>200 & Use_P
 summary(mutation$converted_use_rate_AFD)
 summary(mutation$Use_Period)
 
+x<-na.exclude(mutation$converted_use_rate_AFD)
+# get mean and Standard deviation
+mean = mean(x)
+std = sd(x)
+
+# get threshold values for outliers
+Tmin = mean-(3*std)
+Tmax = mean+(3*std)
+
+# find outlier
+out<-x[which(x < Tmin | x > Tmax)]
+
+
+# remove outlier
+high_use<- mutation %>% filter(converted_use_rate_AFD %in% out)
+mutation<- mutation %>% filter(!converted_use_rate_AFD %in% out)
+
+
 
 ggplot(mutation, aes(x=Use_Period, y=converted_use_rate_AFD, shape=BUCode, color=BUCode)) +
   geom_point()
 
 
-high_use<-mutation %>% filter(converted_use_rate_AFD>quantile(mutation$converted_use_rate_AFD,.95,na.rm=TRUE))
+#high_use<-mutation %>% filter(converted_use_rate_AFD>quantile(mutation$converted_use_rate_AFD,.95,na.rm=TRUE))
 write.csv(high_use,"./outputs/high_use.csv")
 write.csv(mutation,"./outputs/results.csv")
 
+# use " Import-Csv results.csv | Out-GridView " to view csv in Powershell
+
 # 
-
-
 
 # #remove extra columns and keys
 # mutation <- mutation %>% select(Inspection_Date, Meter_Reading, Units, Prev_insp_date, Prev_meter_read, Volume_Used, Use_Period, WR_Number, Latitude, Longitude, BUCode)
 # 
 # 
 
+ggplot(mutation, aes(x=Longitude, y=Latitude, shape=BUCode, color=converted_use_rate_AFD)) +
+  geom_point()
+# Convert the data frame to an sf object
+use_sf <- st_as_sf(mutation, coords = c('Longitude', 'Latitude'), crs = 4326)
+st_write(use_sf, dsn="./outputs/wateruse.shp",append=FALSE)
+use_sf_2020 <- use_sf %>% filter(Inspection_Date >='2020-07-01'& Inspection_Date<'2021-07-01')
+use_sf_2021 <- use_sf %>% filter(Inspection_Date >='2021-07-01'& Inspection_Date<'2022-07-01')
+dir.create("./outputs/wateruse_2020")
+dir.create("./outputs/wateruse_2021")
+st_write(use_sf_2020, dsn="./outputs/wateruse_2020/wateruse_2020.shp", append=FALSE)
+st_write(use_sf_2021, dsn="./outputs/wateruse_2021/wateruse_2021.shp", append=FALSE)
+
+ggplot(use_sf_2020) +
+  geom_sf(mapping=aes(color=converted_use_rate_AFD, size=converted_use_rate_AFD))
+
+ggplot(use_sf_2021) +
+  geom_sf(mapping=aes(color=converted_use_rate_AFD, size=converted_use_rate_AFD))
 # 
 # 
 # MeterInformation %>% filter(id %in% c("5D4EWdYYNszw","_NzaHLu-XCaa")) %>% View()
